@@ -9,6 +9,7 @@ package silanislottery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -20,7 +21,8 @@ int sold_tickets;//counter to store number of sold tickets
 HashMap<Integer, Ticket> winnersList;//to store the rank and winner
 int draw;
 double pot;
-boolean draw_finished;
+boolean draw_finished;//to know whether the draw is finished
+//constructer
     public Draw(int draw_no,double pot,int ticketnumber)
 {
     tickets=new ArrayList<>();
@@ -30,21 +32,23 @@ boolean draw_finished;
     this.pot=pot;
             for(int i=0;i<50;i++)
             {
-                Ticket temp=new Ticket(i, draw, "");
+                Ticket temp=new Ticket(i, draw, "silanis");
                 tickets.add(temp);
             }
 
 }
-    
+    //intializing random winner
     public void intialize_winner()
     {
         for(int i=0;i<3;i++)
         {
-            int winner=(int)(Math.random()*sold_tickets);
+            Random r=new Random();
+            int winner=r.nextInt(50)+1;
             winnersList.put(i+1,tickets.get(winner));
         }
         draw_finished=true;
     }
+    //printing the winner
     public void print_winners()
     {
         System.out.println("Winner \t Prizemoney");
@@ -60,17 +64,9 @@ boolean draw_finished;
       } 
         
     }
-    public void intializetickets()
-    {
-        for(int i=1;i<=50;i++)
-        {
-            Ticket ticket=new Ticket(i, draw, null);
-            tickets.add(ticket);
-            sold_tickets++;
-        }
-        
-    }
-    public void purchaseTicket(String firstName) throws TicketException
+    
+   //helps to purchase tickets
+    public Ticket purchaseTicket(String firstName) throws TicketException
     {
         if(sold_tickets>50)
         {
@@ -82,6 +78,7 @@ boolean draw_finished;
         t.setState(1);
         tickets.remove(sold_tickets);
         tickets.add(sold_tickets,t);
+        return t;
     }
 
     class TicketException extends Exception
